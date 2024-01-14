@@ -12,6 +12,8 @@
   }
 
   &__buttons {
+    display: flex;
+    column-gap: 24px;
     margin-left: auto;
   }
 
