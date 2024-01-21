@@ -27,3 +27,16 @@ export const formatPrice = (price: number) => {
       .replace(/\B(?=(\d{3})+(?!\d))/g, ' ') + ' ₽'
   );
 };
+
+export const sendEvent = (type: string, payload: any) => {
+  const event = {
+    type: type,
+    payload: payload,
+    timestamp: Date.now(),
+  }
+
+  fetch('/api/sendEvent', {
+    method: 'POST',
+    body: JSON.stringify(event),
+  })
+}
