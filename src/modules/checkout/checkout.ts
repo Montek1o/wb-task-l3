@@ -1,12 +1,20 @@
 import { Component } from '../component';
 import { Product } from '../product/product';
 import html from './checkout.tpl.html';
-import { formatPrice } from '../../utils/helpers';
+import { formatPrice, genUUID, sendEvent } from '../../utils/helpers';
 import { cartService } from '../../services/cart.service';
 import { ProductData } from 'types';
 
 class Checkout extends Component {
   products!: ProductData[];
+  totalPrice: number;
+  productIds: number[];
+
+  constructor(props: any) {
+    super(props);
+    this.totalPrice = 0;
+    this.productIds = [];
+  }
 
   async render() {
     this.products = await cartService.get();
@@ -22,10 +30,18 @@ class Checkout extends Component {
       productComp.attach(this.view.cart);
     });
 
-    const totalPrice = this.products.reduce((acc, product) => (acc += product.salePriceU), 0);
-    this.view.price.innerText = formatPrice(totalPrice);
+    this.totalPrice = this.products.reduce((acc, product) => (acc += product.salePriceU), 0);
+    this.view.price.innerText = formatPrice(this.totalPrice);
 
     this.view.btnOrder.onclick = this._makeOrder.bind(this);
+  }
+
+  private _getProductIds() {
+    this.products.forEach((product: ProductData) => {
+      this.productIds.push(product.id);
+    })
+
+    return this.productIds;
   }
 
   private async _makeOrder() {
@@ -34,6 +50,13 @@ class Checkout extends Component {
       method: 'POST',
       body: JSON.stringify(this.products)
     });
+
+    sendEvent('purchase', {
+      orderId: genUUID(),
+      totalPrice: this.totalPrice,
+      productIds: this._getProductIds(),
+    })
+
     window.location.href = '/?isSuccessOrder';
   }
 }
