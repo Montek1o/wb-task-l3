@@ -1,0 +1,29 @@
+.searchSuggestions {
+  display: flex;
+  align-items: center;
+  column-gap: 8px;
+  font-size: 22px;
+  font-weight: 550;
+  line-height: 24px;
+  letter-spacing: 0px;
+  
+  &__text {
+    padding-bottom: 4px;
+  }
+
+  &__item {
+    padding: 4px 6px 8px;
+    border-radius: 8px;
+    background: var(--plate-color);
+  }
+
+  &__example {
+    padding-bottom: 4px;
+    background: linear-gradient(90deg, #DA15B8, #8D06CC);
+    color: transparent;
+    background-clip: text;
+    -webkit-background-clip: text;
+    cursor: pointer;
+  }
+}
+
